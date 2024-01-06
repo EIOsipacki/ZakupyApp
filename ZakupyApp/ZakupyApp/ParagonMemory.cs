@@ -1,62 +1,44 @@
 ﻿
-using System.Diagnostics;
-
 namespace ZakupyApp
 {
     public class ParagonMemory : ParagonBase
     {
-        public ParagonMemory(string shop, string data)
-            : base(shop, data)
+        public ParagonMemory(int year)
+            : base(year)
         {
         }
-        private List<float> sumes = new List<float>();
 
-        public override event ParagonAddedDelegate ParagonAdded;
+        private List<decimal> sumes = new List<decimal>();
 
-        public override void AddParagon(float suma)
+        public int Year { get; set; }
+
+        public override event ParagonAddedDelegate ParagonAddedEvent;
+        public override void AddParagon(decimal suma)
         {
             if (suma > 0)
             {
                 this.sumes.Add(suma);
 
-                if (ParagonAdded != null)
+                if (ParagonAddedEvent != null)
                 {
-                    ParagonAdded(this, new EventArgs());
+                    ParagonAddedEvent(this, new EventArgs());
                 }
             }
             else
             {
                 throw new Exception("Invalid grade value");
             }
-
-        }
-
-        public override void AddParagon(string suma)
-        {
-            if (float.TryParse(suma, out float result))
-            {
-                this.AddParagon(result);
-            }
-            else
-            {
-                throw new Exception("String is not a float");
-            }
-
         }
 
         public override Statistics GetStatistics()
         {
-            var statistics = new Statistics();
+            Statistics statistics = new Statistics();
             foreach (var sume in this.sumes)
             {
                 statistics.AddParagon(sume);
             }
             return statistics;
-
         }
     }
-
-
-
 }
 
